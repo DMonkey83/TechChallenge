@@ -21,6 +21,7 @@ export async function generateQuote(): Promise<Quote[]> {
     if (!degreeDays) {
       quote.warning = `Could not fetch weather data for ${house.designRegion}`;
       quote.estimatedHeatLoss = 29710.8; // Default Value
+      quotes.push(quote);
       continue;
     }
     quote.designRegion = house.designRegion;

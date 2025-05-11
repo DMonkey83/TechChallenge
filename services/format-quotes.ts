@@ -3,6 +3,11 @@ import { Quote } from "../types/weather.types";
 export function formatQuote(quote: Quote): string {
     let oText: string = `--------------------\n${quote.submissionId}\n------------------------------\n`;
 
+    if (quote.warning) {
+        oText += `       Heating Loss: ${quote.estimatedHeatLoss}\n Warning: ${quote.warning}`
+        return oText;
+    }
+
     oText += `  Estimated Heat Loss = ${quote.estimatedHeatLoss}\n`;
     oText += `  Design Region = ${quote.designRegion}\n`;
     oText += `  Power Heat Loss = ${quote.powerHeatLoss}\n`;

@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosInstance } from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 import { WeatherData } from "../types/weather.types";
 
 // Configuration for retries
@@ -14,27 +14,19 @@ export const apiClient: AxiosInstance = axios.create({
 });
 
 // Add retry interceptor
+// weather-service.ts, in the response interceptor
 apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    const config = error.config;
-    if (!config || error.response?.status !== 500) {
-      return Promise.reject(error);
-    }
-
-    let retryCount = (MAX_RETRIES || 0) as number;
+    const config = (error.config || {}) as AxiosRequestConfig & { retryCount?: number };
+    let retryCount = config.retryCount || 0;
     if (retryCount >= MAX_RETRIES) {
       return Promise.reject(error);
     }
-
-    retryCount = retryCount + 1;
-    console.log(
-      `Retrying request to ${config.url} (Attempt ${
-        retryCount + 1
-      }/${MAX_RETRIES})`
-    );
+    config['retryCount'] = retryCount + 1;
+    console.log(`Retrying request to ${config.url} (Attempt ${retryCount + 1}/${MAX_RETRIES})`);
     await new Promise((resolve) => setTimeout(resolve, DELAY_MS));
-    return apiClient(config);
+    return apiClient.request(config);
   }
 );
 
@@ -58,10 +50,12 @@ export async function getWeatherData(location: string): Promise<number | null> {
       degreeDays = degreeDaysRaw;
     }
     //console.log(`degreeDays for ${location}:`, degreeDays, `typeof: ${typeof degreeDays}`);
+    console.log('degreeDays', degreeDays)
 
     // Validate degreeDays
     if (
       typeof degreeDays === "number" &&
+      degreeDays !== undefined &&
       !isNaN(degreeDays) &&
       degreeDays > 0
     ) {
@@ -71,6 +65,7 @@ export async function getWeatherData(location: string): Promise<number | null> {
     // Log unexpected response structure
     console.warn(
       `Invalid or missing degreeDays for ${location}:`,
+      degreeDays,
       JSON.stringify(response.data, null, 2)
     );
     return null;

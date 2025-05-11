@@ -2,6 +2,7 @@ import prompts from 'prompts';
 import { getWeatherData } from './services/weather-service';
 import houseData from './data/houses.json'
 import { AxiosError } from 'axios';
+import { generateQuote } from './services/heat-pump-service';
 
 async function main() {
   console.log('Quote Generator for Heat Pumps');
@@ -20,7 +21,7 @@ async function main() {
   console.log('response')
 
   try {
-    const quotes = await getWeatherData(houseData[0].designRegion)
+    const quotes = await generateQuote()
     console.log(quotes)
   } catch (error: unknown) {
     console.log('Error generating quotes', (error as AxiosError).response?.data)

@@ -36,11 +36,9 @@ export async function getWeatherData(location: string): Promise<number | null> {
     const response = await apiClient.get(
       `/weather?location=${encodeURIComponent(location)}`
     );
-    //console.log(`API response for ${location}:`, JSON.stringify(response.data, null, 2));
 
     // Access degreeDays from nested location object
     const degreeDaysRaw = response.data?.location?.degreeDays;
-    //console.log(`degreeDaysRaw for ${location}:`, degreeDaysRaw, `typeof: ${typeof degreeDaysRaw}`);
 
     // Parse degreeDays
     let degreeDays: number | undefined;
@@ -49,8 +47,6 @@ export async function getWeatherData(location: string): Promise<number | null> {
     } else if (typeof degreeDaysRaw === "number") {
       degreeDays = degreeDaysRaw;
     }
-    //console.log(`degreeDays for ${location}:`, degreeDays, `typeof: ${typeof degreeDays}`);
-    console.log('degreeDays', degreeDays)
 
     // Validate degreeDays
     if (

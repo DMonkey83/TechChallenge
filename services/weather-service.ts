@@ -1,10 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 import { WeatherData } from "../types/weather.types";
-import { API_KEY, API_URL } from "../consts";
+import { API_KEY, API_URL, DELAY_MS, MAX_RETRIES } from "../consts";
 
-// Configuration for retries
-const MAX_RETRIES = 3;
-const DELAY_MS = 1000;
 
 // Create Axios instance
 export const apiClient: AxiosInstance = axios.create({

@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 import { WeatherData } from "../types/weather.types";
+import { API_KEY, API_URL } from "../consts";
 
 // Configuration for retries
 const MAX_RETRIES = 3;
@@ -7,9 +8,9 @@ const DELAY_MS = 1000;
 
 // Create Axios instance
 export const apiClient: AxiosInstance = axios.create({
-  baseURL: "https://063qqrtqth.execute-api.eu-west-2.amazonaws.com/v1",
+  baseURL: API_URL,
   headers: {
-    "x-api-key": "f661f74e-20a7-4e9f-acfc-041cfb846505",
+    "x-api-key": API_KEY,
   },
 });
 
